@@ -62,7 +62,7 @@ def analyze_page(url):
             text = soup.get_text().lower()
             return {
                 "status": res.status_code, "words": len(text.split()), "text": text,
-                "history": [h.status_code for h in res.history], "loop": is_loop
+                "history":[h.status_code for h in res.history], "loop": is_loop
             }
         return {"status": res.status_code, "words": 0, "text": "", "history":[h.status_code for h in res.history], "loop": is_loop}
     except:
@@ -71,9 +71,7 @@ def analyze_page(url):
 @app.get("/api/audit")
 def audit(url: str = Query(...)):
     start_time = time.time()
-    
-    if not url.startswith(("http://", "https://")):
-        url = "https://" + url
+    if not url.startswith(("http://", "https://")): url = "https://" + url
 
     try:
         home_res = requests.get(url, headers=HEADERS, timeout=12, allow_redirects=True)
@@ -147,37 +145,4 @@ def audit(url: str = Query(...)):
             except: pass
 
         score = 100
-        advice =[]
-        
-        if not has_ssl: score -= 15; advice.append({"key": "ssl", "text": "Secure your site with an SSL Certificate (HTTPS) to build user trust."})
-        if load_time > 3.0: score -= 5; advice.append({"key": "speed", "text": f"Server response time is {load_time}s. Optimize speed for better crawler access."})
-        if s_404 > 0: score -= 15; advice.append({"key": "404", "text": f"Fix {s_404} broken internal links to prevent 'Site Navigation' policy violations."})
-        if redirect_loops > 0: score -= 10; advice.append({"key": "loops", "text": f"Resolve {redirect_loops} redirect loops to ensure Googlebot can crawl your pages."})
-        if len(essentials) < 4: score -= 20; advice.append({"key": "policy", "text": f"Add missing policy pages. Found {len(essentials)}/5 (Required: Privacy, Contact, Terms, etc.)."})
-        if banned: score -= 30; advice.append({"key": "banned", "text": f"Critical: Remove prohibited content keywords to comply with Publisher Policies ({', '.join(set(banned))})."})
-        if avg_word_count < 600: score -= 15; advice.append({"key": "thin", "text": f"Thin Content detected (Avg {avg_word_count} words). Aim for 600+ words of unique value per page."})
-        if h1_tags != 1: score -= 5; advice.append({"key": "h1", "text": f"SEO Tagging: Ensure your homepage has exactly one H1 tag (Found {h1_tags})."})
-        if not has_sitemap: score -= 5; advice.append({"key": "sitemap", "text": "Generate and submit a sitemap.xml for proper search engine indexing."})
-        if under_construction: score -= 25; advice.append({"key": "construction", "text": "Remove 'Under Construction' or placeholder text before applying."})
-        if domain_age_days != "Unknown" and isinstance(domain_age_days, int) and domain_age_days < 30: 
-            score -= 10; advice.append({"key": "age", "text": "Domain is relatively new. Ensure consistent content publishing for 1-2 months."})
-
-        return JSONResponse({
-            "score": max(0, min(score, 100)),
-            "load_time": load_time,
-            "total_discovered": total_discovered,
-            "pages_scanned": len(scanned_data),
-            "avg_words": avg_word_count,
-            "s_200": s_200, "s_404": s_404, "s_301": s_301, "s_302": s_302, "redirect_loops": redirect_loops,
-            "has_ssl": has_ssl, "is_www": is_www,
-            "essentials_found": len(essentials), "banned_words": list(set(banned)),
-            "cookie_consent": cookie_consent, "under_construction": under_construction,
-            "has_title": has_title, "has_desc": has_desc, "h1_tags": h1_tags, "h2_tags": h2_tags, "h3_tags": h3_tags,
-            "img_total": img_total, "img_alt": img_alt, "is_readable": is_readable,
-            "has_robots": has_robots, "has_sitemap": has_sitemap, "has_viewport": has_viewport,
-            "has_adsense": has_adsense, "domain_age_days": domain_age_days,
-            "advice": advice
-        })
-
-    except Exception as e:
-        return JSONResponse({"error": "Failed to connect to the target website. Check the URL or ensure the site allows bots."}, status_code=500)
+        advice =
