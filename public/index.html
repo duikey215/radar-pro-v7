@@ -54,8 +54,9 @@
                     <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Eligibility Score</p>
                     <h2 id="mOdds" class="text-4xl font-black text-slate-800">0%</h2>
                 </div>
+                <!-- 🎯 Updated Label for Accuracy -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
-                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Links Extracted</p>
+                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Total Posts/Pages</p>
                     <h2 id="mFound" class="text-3xl font-bold text-slate-700">0</h2>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center relative overflow-hidden">
@@ -100,21 +101,18 @@
     </div>
 
     <script>
-        // =======================================================
-        // 🔗 UPDATE YOUR "FIX NOW" ARTICLE LINKS HERE:
-        // =======================================================
         const articleLinks = {
-            "ssl": "https://yourblog.com/how-to-fix-ssl",
-            "speed": "https://yourblog.com/improve-site-speed",
-            "404": "https://yourblog.com/fix-broken-links",
-            "loops": "https://yourblog.com/fix-redirect-loops",
-            "policy": "https://yourblog.com/create-adsense-policy-pages",
-            "banned": "https://yourblog.com/adsense-prohibited-content",
-            "thin": "https://yourblog.com/fix-thin-content",
-            "h1": "https://yourblog.com/seo-h1-tags",
-            "sitemap": "https://yourblog.com/generate-sitemap",
-            "construction": "https://yourblog.com/site-readiness",
-            "age": "https://yourblog.com/domain-age-adsense"
+            "ssl": "#",
+            "speed": "#",
+            "404": "#",
+            "loops": "#",
+            "policy": "#",
+            "banned": "#",
+            "thin": "#",
+            "h1": "#",
+            "sitemap": "#",
+            "construction": "#",
+            "age": "#"
         };
 
         function slide(idx) {
@@ -142,9 +140,9 @@
             loadBox.classList.remove('hidden');
 
             try {
-                setTimeout(()=> loadTxt.innerText = "Extracting website architecture and scanning links...", 1500);
-                setTimeout(()=> loadTxt.innerText = "Analyzing content uniqueness and algorithm metrics...", 3500);
-                setTimeout(()=> loadTxt.innerText = "Compiling official AdSense Policy report...", 6000);
+                setTimeout(()=> loadTxt.innerText = "Extracting sitemaps and counting total posts accurately...", 1500);
+                setTimeout(()=> loadTxt.innerText = "Analyzing content uniqueness and algorithm metrics...", 4500);
+                setTimeout(()=> loadTxt.innerText = "Compiling official AdSense Policy report...", 7000);
 
                 const res = await fetch(`/api/audit?url=${encodeURIComponent(url)}`);
                 const data = await res.json();
@@ -157,7 +155,11 @@
                 const scoreColor = data.score >= 80 ? '#059669' : (data.score >= 50 ? '#d97706' : '#dc2626');
                 document.getElementById('mOdds').innerText = data.score + "%";
                 document.getElementById('mOdds').style.color = scoreColor;
-                document.getElementById('mFound').innerText = data.total_discovered;
+                
+                // 🎯 Formatting exact number with commas (e.g., 1,250)
+                let formattedCount = data.total_discovered.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                document.getElementById('mFound').innerText = formattedCount;
+                
                 document.getElementById('mScan').innerText = data.pages_scanned;
                 document.getElementById('mWords').innerHTML = `${data.avg_words} <span class="text-sm text-slate-400 font-medium">words</span>`;
                 document.getElementById('mSpeed').innerText = data.load_time + "s";
@@ -213,7 +215,6 @@
                         <h2 class="text-xl font-black mb-5 uppercase text-emerald-700">🎉 Official Report: Site Ready for Monetization</h2>
                         <p class="text-slate-600 mb-4">Your website complies with all technical and content guidelines. However, please note:</p>
                         
-                        <!-- NEW DISCLAIMER -->
                         <div class="bg-amber-50 p-4 rounded-xl border-l-4 border-amber-500 mb-4">
                             <p class="text-amber-800 font-semibold text-sm">⚠️ <b>Important Disclaimer:</b> Google AdSense policies and algorithms change frequently. While your site passes our stringent technical audit with a 100% score, the final approval decision is subject to Google's manual review team. Getting 100% here guarantees technical readiness, but Google holds the final authority.</p>
                         </div>
