@@ -3,134 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radar Pro V7 | Elite AdSense Auditor</title>
+    <title>AdSense Approval Checker & Eligibility Auditor 💵</title>
+    <meta name="description" content="Check your website's Google AdSense approval eligibility. Deep scan for SEO, thin content, policy violations, and broken links instantly.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; scroll-behavior: smooth;}
-        .hero-box { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; scroll-behavior: smooth;}
+        .hero-bg { background-color: #0f172a; background-image: radial-gradient(circle at top right, #1e293b, #0f172a); }
         .hide-scroll::-webkit-scrollbar { display: none; }
         
-        /* Swipeable Container */
-        .slider-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1.25rem; padding-bottom: 1.5rem; }
-        .slider-card { flex: 0 0 88%; scroll-snap-align: center; background: white; border-radius: 12px; border-top: 4px solid #3b82f6; box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 1.5rem; }
-        @media (min-width: 768px) { .slider-card { flex: 0 0 calc(50% - 10px); } }
-        @media (min-width: 1024px) { .slider-card { flex: 0 0 calc(33.333% - 14px); } }
+        /* Swipeable Container - Refined Shadows */
+        .slider-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1.5rem; padding-bottom: 2rem; }
+        .slider-card { flex: 0 0 88%; scroll-snap-align: center; background: white; border-radius: 16px; border-top: 5px solid #3b82f6; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); padding: 1.75rem; }
+        @media (min-width: 768px) { .slider-card { flex: 0 0 calc(50% - 12px); } }
+        @media (min-width: 1024px) { .slider-card { flex: 0 0 calc(33.333% - 16px); } }
         
-        /* Dynamic Status Badges */
-        .badge { display: flex; align-items: flex-start; padding: 12px; border-radius: 8px; margin-bottom: 12px; font-weight: 600; font-size: 13.5px; border-left: 4px solid; }
-        .icon-box { margin-right: 10px; font-size: 16px; }
+        /* Cohesive Professional Badges */
+        .badge { display: flex; align-items: flex-start; padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; font-weight: 600; font-size: 14px; background: #f8fafc; border: 1px solid #e2e8f0; transition: background 0.2s;}
+        .badge:hover { background: #f1f5f9; }
+        .icon-box { margin-right: 12px; font-size: 16px; margin-top: 1px;}
         
-        /* Spinner */
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px;}
+        /* Premium Loader */
+        .loader { border: 3px solid #e2e8f0; border-top: 3px solid #3b82f6; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 12px;}
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="p-3 md:p-6 text-slate-800">
+<body class="p-3 md:p-8">
 
     <div class="max-w-7xl mx-auto">
         
-        <!-- Hero Header -->
-        <div class="hero-box rounded-2xl p-8 md:p-12 text-center shadow-xl mb-8">
-            <h1 class="text-white text-4xl md:text-5xl font-black mb-2">🧿 Radar <span class="text-blue-500">Pro</span> Max</h1>
-            <p class="text-slate-400 text-sm md:text-base font-medium">Ultimate 50-Page Engine • Full Professional Metrics Edition</p>
+        <!-- Professional SEO Header -->
+        <div class="hero-bg rounded-3xl p-8 md:p-14 text-center shadow-xl mb-10">
+            <h1 class="text-white text-3xl md:text-5xl font-black mb-3 tracking-tight">💵 AdSense Eligibility Checker</h1>
+            <p class="text-slate-400 text-sm md:text-lg font-medium max-w-2xl mx-auto">Analyze 50+ ranking factors, identify policy violations, and optimize your site for Google AdSense approval.</p>
         </div>
 
         <!-- Input Section -->
-        <div class="bg-white p-2 rounded-2xl shadow-md flex flex-col md:flex-row gap-2 mb-10 border border-slate-100">
-            <input id="urlInput" type="text" placeholder="Enter website (e.g. google.com)" class="flex-1 p-4 outline-none text-lg rounded-xl focus:bg-slate-50 transition-colors">
-            <button onclick="runAudit()" id="mainBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-black px-10 py-4 rounded-xl transition-all active:scale-95 shadow-lg">🚀 INITIATE SCAN</button>
+        <div class="bg-white p-2 md:p-3 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row gap-3 mb-12">
+            <input id="urlInput" type="text" placeholder="Enter your website URL (e.g., mysite.com)" class="flex-1 p-4 md:px-6 outline-none text-lg text-slate-700 font-medium bg-transparent">
+            <button onclick="runAudit()" id="mainBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-10 py-4 rounded-xl transition-all active:scale-95 shadow-md flex items-center justify-center">
+                <span>Check Eligibility 🚀</span>
+            </button>
         </div>
 
         <!-- Loading State -->
-        <div id="loadingBox" class="hidden bg-blue-50 border border-blue-200 text-blue-800 p-6 rounded-xl text-center mb-8 font-bold animate-pulse">
+        <div id="loadingBox" class="hidden bg-white border border-slate-200 text-slate-700 p-6 rounded-2xl text-center mb-10 shadow-sm font-semibold">
             <div class="loader"></div> <span id="loadingText">Establishing secure connection & crawling site architecture...</span>
         </div>
 
         <!-- Results Dashboard -->
-        <div id="dashboard" class="hidden">
+        <div id="dashboard" class="hidden animate-fade-in">
             
-            <!-- Metric Cards (With new Total Discovered metric) -->
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-green-500 text-center">
-                    <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wide">Approval Odds</p>
-                    <h2 id="mOdds" class="text-3xl font-black mt-1">0%</h2>
+            <!-- Metric Cards: Logical Flow -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-5 mb-10">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
+                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Eligibility Score</p>
+                    <h2 id="mOdds" class="text-4xl font-black text-slate-800">0%</h2>
                 </div>
-                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-blue-500 text-center">
-                    <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wide">Total Links Found</p>
-                    <h2 id="mFound" class="text-3xl font-black text-slate-700 mt-1">0</h2>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
+                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Total Posts Found</p>
+                    <h2 id="mFound" class="text-3xl font-bold text-slate-700">0</h2>
                 </div>
-                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-blue-500 text-center">
-                    <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wide">Deep Scanned</p>
-                    <h2 id="mScan" class="text-3xl font-black text-slate-700 mt-1">0</h2>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-blue-100 text-blue-700 text-[9px] font-black px-2 py-1 rounded-bl-lg">DEEP SCAN</div>
+                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Pages Audited</p>
+                    <h2 id="mScan" class="text-3xl font-bold text-slate-700">0</h2>
                 </div>
-                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-blue-500 text-center">
-                    <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wide">Avg Word Count</p>
-                    <h2 id="mWords" class="text-3xl font-black text-slate-700 mt-1">0</h2>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
+                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Content Depth</p>
+                    <h2 id="mWords" class="text-3xl font-bold text-slate-700">0 <span class="text-sm text-slate-400 font-medium">words</span></h2>
                 </div>
-                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-blue-500 text-center">
-                    <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wide">Server Speed</p>
-                    <h2 id="mSpeed" class="text-3xl font-black text-slate-700 mt-1">0s</h2>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
+                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Audit Speed</p>
+                    <h2 id="mSpeed" class="text-3xl font-bold text-slate-700">0s</h2>
                 </div>
             </div>
 
-            <!-- Pill Navigation -->
-            <div class="flex gap-2 overflow-x-auto hide-scroll mb-4 pb-2">
-                <button onclick="slide(0)" class="bg-slate-100 hover:bg-slate-200 px-5 py-2.5 rounded-full text-sm font-bold text-slate-700 whitespace-nowrap transition-colors">⚙️ Tech & Speed</button>
-                <button onclick="slide(1)" class="bg-slate-100 hover:bg-slate-200 px-5 py-2.5 rounded-full text-sm font-bold text-slate-700 whitespace-nowrap transition-colors">🔗 Redirects</button>
-                <button onclick="slide(2)" class="bg-slate-100 hover:bg-slate-200 px-5 py-2.5 rounded-full text-sm font-bold text-slate-700 whitespace-nowrap transition-colors">🛡️ Policy</button>
-                <button onclick="slide(3)" class="bg-slate-100 hover:bg-slate-200 px-5 py-2.5 rounded-full text-sm font-bold text-slate-700 whitespace-nowrap transition-colors">📝 Content & SEO</button>
-                <button onclick="slide(4)" class="bg-slate-100 hover:bg-slate-200 px-5 py-2.5 rounded-full text-sm font-bold text-slate-700 whitespace-nowrap transition-colors">🗂️ Structure</button>
-                <button onclick="slide(5)" class="bg-slate-100 hover:bg-slate-200 px-5 py-2.5 rounded-full text-sm font-bold text-slate-700 whitespace-nowrap transition-colors">🌐 Domain</button>
+            <!-- Swipe Navigation -->
+            <div class="flex gap-3 overflow-x-auto hide-scroll mb-6 pb-2 px-1">
+                <button onclick="slide(0)" class="bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-200 px-6 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all shadow-sm">⚙️ Technical SEO</button>
+                <button onclick="slide(1)" class="bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-200 px-6 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all shadow-sm">🔗 Links & Errors</button>
+                <button onclick="slide(2)" class="bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-200 px-6 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all shadow-sm">🛡️ Policy Compliance</button>
+                <button onclick="slide(3)" class="bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-200 px-6 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all shadow-sm">📝 Content Quality</button>
+                <button onclick="slide(4)" class="bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-200 px-6 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all shadow-sm">🗂️ Site Structure</button>
+                <button onclick="slide(5)" class="bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-200 px-6 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all shadow-sm">🌐 Domain Metrics</button>
             </div>
 
-            <!-- The Full 6-Card Swipeable Carousel -->
+            <!-- Premium Swipeable Carousel -->
             <div class="slider-container hide-scroll" id="carousel">
-                <div class="slider-card"><h3 class="text-lg font-black mb-4 border-b pb-2 text-slate-800">⚙️ Tech & Speed</h3><div id="c1"></div></div>
-                <div class="slider-card"><h3 class="text-lg font-black mb-4 border-b pb-2 text-slate-800">🔗 Redirects & Errors</h3><div id="c2"></div></div>
-                <div class="slider-card"><h3 class="text-lg font-black mb-4 border-b pb-2 text-slate-800">🛡️ AdSense Policy</h3><div id="c3"></div></div>
-                <div class="slider-card"><h3 class="text-lg font-black mb-4 border-b pb-2 text-slate-800">📝 Content & SEO</h3><div id="c4"></div></div>
-                <div class="slider-card"><h3 class="text-lg font-black mb-4 border-b pb-2 text-slate-800">🗂️ Structure</h3><div id="c5"></div></div>
-                <div class="slider-card"><h3 class="text-lg font-black mb-4 border-b pb-2 text-slate-800">🌐 Domain Health</h3><div id="c6"></div></div>
+                <div class="slider-card"><h3 class="text-lg font-bold mb-5 border-b border-slate-100 pb-3 text-slate-800">⚙️ Technical SEO</h3><div id="c1"></div></div>
+                <div class="slider-card"><h3 class="text-lg font-bold mb-5 border-b border-slate-100 pb-3 text-slate-800">🔗 Links & Errors</h3><div id="c2"></div></div>
+                <div class="slider-card"><h3 class="text-lg font-bold mb-5 border-b border-slate-100 pb-3 text-slate-800">🛡️ Policy Compliance</h3><div id="c3"></div></div>
+                <div class="slider-card"><h3 class="text-lg font-bold mb-5 border-b border-slate-100 pb-3 text-slate-800">📝 Content Quality</h3><div id="c4"></div></div>
+                <div class="slider-card"><h3 class="text-lg font-bold mb-5 border-b border-slate-100 pb-3 text-slate-800">🗂️ Site Structure</h3><div id="c5"></div></div>
+                <div class="slider-card"><h3 class="text-lg font-bold mb-5 border-b border-slate-100 pb-3 text-slate-800">🌐 Domain Metrics</h3><div id="c6"></div></div>
             </div>
 
-            <!-- Authority Advice Box -->
-            <div id="adviceBox" class="mt-4 bg-white p-6 md:p-8 rounded-2xl shadow-md border border-slate-200"></div>
+            <!-- Professional Advice Box -->
+            <div id="adviceBox" class="mt-4 bg-white p-8 md:p-10 rounded-3xl shadow-md border border-slate-200"></div>
 
         </div>
     </div>
 
     <script>
-        // Smooth scroll for Pill Menu
         function slide(idx) {
             const el = document.getElementById('carousel');
             el.scrollTo({ left: el.children[idx].offsetLeft - el.offsetLeft, behavior: 'smooth' });
         }
 
-        // Logic to generate Green/Red/Yellow badges accurately
         function renderBadge(cond, passTxt, failTxt, warnCond=false, warnTxt="") {
-            if(warnCond) return `<div class="badge bg-yellow-50 text-yellow-800 border-yellow-500"><span class="icon-box">⚠️</span><div>${warnTxt}</div></div>`;
-            if(cond) return `<div class="badge bg-green-50 text-green-800 border-green-500"><span class="icon-box">✅</span><div>${passTxt}</div></div>`;
-            return `<div class="badge bg-red-50 text-red-800 border-red-500"><span class="icon-box">❌</span><div>${failTxt}</div></div>`;
+            if(warnCond) return `<div class="badge"><span class="icon-box">⚠️</span><div class="text-amber-700">${warnTxt}</div></div>`;
+            if(cond) return `<div class="badge"><span class="icon-box">✅</span><div class="text-emerald-700">${passTxt}</div></div>`;
+            return `<div class="badge border-l-red-500 bg-red-50"><span class="icon-box">❌</span><div class="text-red-700">${failTxt}</div></div>`;
         }
 
         async function runAudit() {
             const url = document.getElementById('urlInput').value.trim();
-            if(!url) return alert("Please enter a valid URL");
+            if(!url) return alert("Please enter a valid website URL");
 
             const btn = document.getElementById('mainBtn');
             const loadBox = document.getElementById('loadingBox');
             const loadTxt = document.getElementById('loadingText');
             
+            btn.innerHTML = `<div class="loader" style="border-top-color: white;"></div> <span>Analyzing Site...</span>`;
             btn.disabled = true;
             document.getElementById('dashboard').classList.add('hidden');
             loadBox.classList.remove('hidden');
 
             try {
-                // Dynamic Loading Text Steps
-                setTimeout(()=> loadTxt.innerText = "Extracting website architecture and gathering 50 deep links...", 1500);
-                setTimeout(()=> loadTxt.innerText = "Stealth Mode Active: Analyzing content depth and algorithms...", 3500);
-                setTimeout(()=> loadTxt.innerText = "Compiling AdSense Policy checks and final report...", 6000);
+                setTimeout(()=> loadTxt.innerText = "Extracting website architecture and scanning total posts...", 1500);
+                setTimeout(()=> loadTxt.innerText = "Analyzing content uniqueness and algorithm metrics...", 3500);
+                setTimeout(()=> loadTxt.innerText = "Compiling official AdSense Policy report...", 6000);
 
                 const res = await fetch(`/api/audit?url=${encodeURIComponent(url)}`);
                 const data = await res.json();
@@ -140,79 +143,82 @@
                 document.getElementById('dashboard').classList.remove('hidden');
 
                 // Metric Cards
+                const scoreColor = data.score >= 80 ? '#059669' : (data.score >= 50 ? '#d97706' : '#dc2626');
                 document.getElementById('mOdds').innerText = data.score + "%";
-                document.getElementById('mOdds').style.color = data.score >= 80 ? '#22c55e' : (data.score >= 50 ? '#eab308' : '#ef4444');
+                document.getElementById('mOdds').style.color = scoreColor;
                 document.getElementById('mFound').innerText = data.total_discovered;
                 document.getElementById('mScan').innerText = data.pages_scanned;
-                document.getElementById('mWords').innerText = data.avg_words;
+                document.getElementById('mWords').innerHTML = `${data.avg_words} <span class="text-sm text-slate-400 font-medium">words</span>`;
                 document.getElementById('mSpeed').innerText = data.load_time + "s";
 
                 // Card 1: Tech
                 document.getElementById('c1').innerHTML = 
-                    renderBadge(data.s_200>0, `Website Status: 200 OK (${data.s_200} live)`, "Connection Failed") +
-                    renderBadge(data.has_ssl, "SSL Certificate Valid (HTTPS)", "SSL Missing. Critical for AdSense.") +
-                    renderBadge(data.load_time <= 2.5, `LCP/Server Latency: Fast (${data.load_time}s)`, `Server Latency: Slow (${data.load_time}s)`, (data.load_time > 2.5 && data.load_time <= 4.0), `Server Latency: Average (${data.load_time}s).`) +
-                    renderBadge(data.is_www, "Canonical URL: WWW setup correctly", "Canonical URL: Non-WWW detected. Check 301s.");
+                    renderBadge(data.s_200>0, `Server Status: 200 OK (${data.s_200} pages live)`, "Connection Failed") +
+                    renderBadge(data.has_ssl, "SSL Certificate is Active & Secure", "SSL Missing. Highly insecure.") +
+                    renderBadge(data.load_time <= 2.5, `Excellent Latency: ${data.load_time}s`, `Poor Server Speed: ${data.load_time}s`, (data.load_time > 2.5 && data.load_time <= 4.0), `Average Latency: ${data.load_time}s. Optimize cache.`) +
+                    renderBadge(data.is_www, "Canonical URL setup is correct", "Non-WWW Canonical detected.");
 
                 // Card 2: Errors
                 document.getElementById('c2').innerHTML = 
-                    renderBadge(data.s_404==0, `Broken Links (404): 0 Found`, `Broken Links Alert! Found ${data.s_404} dead pages.`) +
-                    renderBadge(data.redirect_loops==0, "Redirect Loops: 0 Found (Healthy)", `Redirect Loops: ${data.redirect_loops} detected! Googlebot will fail.`) +
-                    renderBadge(data.s_302==0, "Temporary Redirects (302): None", "", (data.s_302>0), `Temp Redirects (302) Found: ${data.s_302}. Use 301.`) +
-                    renderBadge(data.s_301>=0, `Permanent Redirects (301): ${data.s_301} Logged`, "");
+                    renderBadge(data.s_404==0, `Broken Links: 0 Found (Healthy)`, `Critical: ${data.s_404} Dead Pages Found.`) +
+                    renderBadge(data.redirect_loops==0, "Architecture: No Redirect Loops", `Warning: ${data.redirect_loops} Redirect Loops detected.`) +
+                    renderBadge(data.s_302==0, "Temporary Redirects (302): None", "", (data.s_302>0), `${data.s_302} Temp Redirects Found. Use Permanent 301s.`) +
+                    renderBadge(data.s_301>=0, `Permanent 301 Redirects: ${data.s_301} Logged`, "");
 
                 // Card 3: Policy
                 document.getElementById('c3').innerHTML = 
-                    renderBadge(data.essentials_found>=4, `Essential Pages Found (${data.essentials_found}/5)`, "Missing Mandatory Privacy/Contact Pages!") +
-                    renderBadge(data.banned_words.length===0, "Content Policy: 100% Clean", `Prohibited Material Found: ${data.banned_words.join(", ")}`) +
-                    renderBadge(!data.under_construction, "Low Value Content Check: Site is Live", "Site contains 'Under Construction' spam.") +
-                    renderBadge(data.cookie_consent, "Cookie/GDPR Consent Detected", "", (!data.cookie_consent), "Cookie Consent missing (Required for EU).");
+                    renderBadge(data.essentials_found>=4, `Mandatory Pages: ${data.essentials_found}/5 Found`, "Essential Policy/Contact Pages Missing.") +
+                    renderBadge(data.banned_words.length===0, "Content Integrity: 100% Clean", `Prohibited Terms Found: ${data.banned_words.join(", ")}`) +
+                    renderBadge(!data.under_construction, "Site Readiness: Active", "Placeholder 'Under Construction' text found.") +
+                    renderBadge(data.cookie_consent, "Cookie Consent Banner Detected", "", (!data.cookie_consent), "Cookie Banner recommended for EU traffic.");
 
                 // Card 4: SEO
                 document.getElementById('c4').innerHTML = 
-                    renderBadge(data.avg_words>=600, `Deep Content: ${data.avg_words} avg words per page`, `Thin Content: Only ${data.avg_words} avg words. Risk of rejection.`, (data.avg_words>=400 && data.avg_words<600), `Moderate Content: ${data.avg_words} avg words. Target 600+.`) +
-                    renderBadge(data.has_title && data.has_desc, "Meta Title & Description perfectly mapped", "Missing Title or Description Meta tags.") +
-                    renderBadge(data.h1_tags==1 && data.h2_tags>0, `Heading Hierarchy: Perfect (H1: ${data.h1_tags}, H2: ${data.h2_tags})`, `Heading Error: Found ${data.h1_tags} H1 tags. Needs exactly 1.`) +
-                    renderBadge(data.img_total>0 && (data.img_alt/data.img_total)>0.8, `Image SEO: ${data.img_alt}/${data.img_total} Optimized`, "", (data.img_total>0 && (data.img_alt/data.img_total)<=0.8), `Image SEO: Only ${data.img_alt}/${data.img_total} have Alt Text.`) +
-                    renderBadge(data.is_readable, "Readability Score: Healthy sentence length", "", (!data.is_readable), "Readability Warning: Sentences too short or too long.");
+                    renderBadge(data.avg_words>=600, `Content Depth: ${data.avg_words} avg words`, `Thin Content Risk: ${data.avg_words} avg words.`, (data.avg_words>=400 && data.avg_words<600), `Moderate Content: ${data.avg_words} avg words. Target 600+.`) +
+                    renderBadge(data.has_title && data.has_desc, "Meta Title & Description present", "Missing critical Meta tags.") +
+                    renderBadge(data.h1_tags==1 && data.h2_tags>0, `Heading Hierarchy: Excellent (H1: ${data.h1_tags})`, `Heading Error: Found ${data.h1_tags} H1 tags. Exactly 1 required.`) +
+                    renderBadge(data.img_total>0 && (data.img_alt/data.img_total)>0.8, `Image Optimization: ${data.img_alt}/${data.img_total} Alt Tags`, "", (data.img_total>0 && (data.img_alt/data.img_total)<=0.8), `Image SEO Warning: Missing Alt Text on images.`) +
+                    renderBadge(data.is_readable, "Readability Score: Optimal", "", (!data.is_readable), "Grammar Warning: Sentence structure needs review.");
 
                 // Card 5: Structure
                 document.getElementById('c5').innerHTML = 
-                    renderBadge(data.has_robots, "Robots.txt present (Search Engine friendly)", "Robots.txt missing! Google cannot crawl.") +
-                    renderBadge(data.has_sitemap, "Sitemap.xml present (Indexing ready)", "Sitemap.xml missing! Crucial for Webmaster tools.") +
-                    renderBadge(data.has_viewport, "Mobile Viewport Tag (Responsive)", "Not Mobile Friendly! Missing viewport tag.") +
-                    renderBadge(data.pages_scanned>15, `Internal Linking Depth: Excellent (${data.pages_scanned} pages)`, "", (data.pages_scanned<=15), `Site Structure: Too small (${data.pages_scanned} pages). Build more.`);
+                    renderBadge(data.has_robots, "Robots.txt present (Crawlable)", "Robots.txt missing! Fix immediately.") +
+                    renderBadge(data.has_sitemap, "Sitemap.xml present (Indexable)", "Sitemap.xml missing from root directory.") +
+                    renderBadge(data.has_viewport, "Mobile Viewport is Responsive", "Site is not optimized for Mobile devices.") +
+                    renderBadge(data.pages_scanned>15, `Site Depth: Good (${data.pages_scanned} pages)`, "", (data.pages_scanned<=15), `Site Structure Warning: Less than 15 pages scanned.`);
 
                 // Card 6: Domain
                 let domAgeWarn = data.domain_age_days != "Unknown" && data.domain_age_days >= 30 && data.domain_age_days < 60;
                 let domAgePass = data.domain_age_days != "Unknown" && data.domain_age_days >= 60;
                 document.getElementById('c6').innerHTML = 
-                    renderBadge(domAgePass, `Domain Age: ${data.domain_age_days} Days (Trusted)`, `Domain Too New (${data.domain_age_days} Days)`, domAgeWarn || data.domain_age_days=="Unknown", data.domain_age_days=="Unknown" ? "Domain Age: Verify manually (1-2 months required)." : `Age: ${data.domain_age_days} Days (Wait 60+ days)`) +
-                    renderBadge(data.has_adsense, "AdSense Code Detected! Site has placements.", "", (!data.has_adsense), "No AdSense Publisher Code found in HTML <head>.") +
-                    renderBadge(true, "", "", true, "Google Indexing: Search 'site:yourdomain.com' to verify.");
+                    renderBadge(domAgePass, `Domain Trust: ${data.domain_age_days} Days Old`, `Domain Too New (${data.domain_age_days} Days)`, domAgeWarn || data.domain_age_days=="Unknown", data.domain_age_days=="Unknown" ? "Domain Age: Verify manually (requires 1-2 months)." : `Age Verification: ${data.domain_age_days} Days. Maintain activity.`) +
+                    renderBadge(data.has_adsense, "Monetization: AdSense Code Detected", "", (!data.has_adsense), "No AdSense Publisher Code found in site header.") +
+                    renderBadge(true, "Organic Source: Ensure traffic is primarily from Google/Bing", "", true, "Indexing: Type 'site:yourdomain.com' in Google to verify.");
 
-                // Advice Box Setup
+                // Professional Advice Box Setup
                 let advBox = document.getElementById('adviceBox');
                 if(data.advice.length === 0) {
                     advBox.innerHTML = `
-                        <h2 class="text-xl font-black mb-4 uppercase text-green-700 border-b-2 border-green-100 pb-2">🎉 EXCELLENT: SITE READY FOR MONETIZATION</h2>
-                        <div class="bg-green-50 p-4 rounded-xl border-l-4 border-green-500 font-semibold text-green-800 mb-2">1. Domain Trust: Ensure domain is active for 1-2 months.</div>
-                        <div class="bg-green-50 p-4 rounded-xl border-l-4 border-green-500 font-semibold text-green-800 mb-2">2. Organic Traffic: Avoid paid/bot traffic. Focus on Google/Bing.</div>
-                        <div class="bg-green-50 p-4 rounded-xl border-l-4 border-green-500 font-semibold text-green-800">3. Ad Spaces: Keep clean layout for Auto Ads.</div>
+                        <h2 class="text-xl font-black mb-5 uppercase text-emerald-700">🎉 Official Report: Site Ready for Monetization</h2>
+                        <p class="text-slate-600 mb-4">Your website complies with primary Google AdSense quality guidelines. Maintain these best practices before submitting:</p>
+                        <div class="flex items-start gap-3 mb-3"><span class="text-emerald-500 font-bold">✓</span> <p class="text-slate-700"><b>Domain Trust:</b> Ensure active publishing history for 1-2 months.</p></div>
+                        <div class="flex items-start gap-3 mb-3"><span class="text-emerald-500 font-bold">✓</span> <p class="text-slate-700"><b>Organic Traffic:</b> Avoid paid/bot traffic. AdSense prefers search engine visitors.</p></div>
+                        <div class="flex items-start gap-3"><span class="text-emerald-500 font-bold">✓</span> <p class="text-slate-700"><b>Ad Placements:</b> Keep empty, non-intrusive spaces ready for Auto Ads.</p></div>
                     `;
                 } else {
-                    let errHtml = `<h2 class="text-xl font-black mb-4 uppercase text-slate-800 border-b-2 border-slate-100 pb-2">⚠️ ACTION REQUIRED: FIXES</h2>`;
+                    let errHtml = `<h2 class="text-xl font-black mb-5 uppercase text-slate-800">📋 Action Required: Compliance Fixes</h2>`;
+                    errHtml += `<p class="text-slate-500 mb-5">Our algorithms detected the following issues that typically result in AdSense rejection. Resolve these before applying:</p>`;
                     data.advice.forEach((a, i) => {
-                        errHtml += `<div class="bg-red-50 p-4 rounded-xl border-l-4 border-red-500 font-semibold text-red-800 mb-3">${i+1}. ${a}</div>`;
+                        errHtml += `<div class="bg-red-50 p-4 rounded-xl border border-red-100 border-l-4 border-l-red-500 font-medium text-red-800 mb-3 text-sm leading-relaxed"><span class="font-bold mr-1">Issue ${i+1}:</span> ${a}</div>`;
                     });
                     advBox.innerHTML = errHtml;
                 }
 
             } catch (e) {
                 loadBox.classList.add('hidden');
-                alert("❌ Scan Failed: Make sure the URL is correct and the site does not block bots (e.g., Cloudflare under attack mode).");
+                alert("❌ Scan Failed: Verify the URL or ensure the server is not blocking bots.");
             } finally {
-                btn.innerText = "🚀 INITIATE SCAN";
+                btn.innerHTML = "<span>Check Eligibility 🚀</span>";
                 btn.disabled = false;
                 loadTxt.innerText = "Establishing secure connection & crawling site architecture...";
             }
