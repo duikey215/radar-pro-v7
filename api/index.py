@@ -19,23 +19,24 @@ def analyze_single_page(url):
     try:
         time.sleep(random.uniform(0.1, 0.3))
         res = requests.get(url, headers=HEADERS, timeout=8)
-        soup = BeautifulSoup(res.text, 'html.parser')
-        text = soup.get_text().lower()
-        return {
-            "status": res.status_code,
-            "words": len(text.split()),
-            "text": text,
-            "loop": len(res.history) >= 3,
-            "h1s": len(soup.find_all('h1'))
-        }
+        if res.status_code == 200:
+            soup = BeautifulSoup(res.text, 'html.parser')
+            text = soup.get_text().lower()
+            return {
+                "status": res.status_code,
+                "words": len(text.split()),
+                "text": text,
+                "loop": len(res.history) >= 3
+            }
+        return {"status": res.status_code, "words": 0, "text": "", "loop": False}
     except:
-        return {"status": 0, "words": 0, "text": "", "loop": False, "h1s": 0}
+        return {"status": 0, "words": 0, "text": "", "loop": False}
 
 @app.get("/api/audit")
 def audit(url: str = Query(...)):
     start_time = time.time()
     try:
-        # Step 1: Homepage & Links
+        # Step 1: Homepage fetch
         home_res = requests.get(url, headers=HEADERS, timeout=10)
         home_soup = BeautifulSoup(home_res.text, 'html.parser')
         
@@ -43,14 +44,15 @@ def audit(url: str = Query(...)):
         internal_urls = list(set([urljoin(url, a['href']).split('#')[0] for a in links 
                                  if urlparse(urljoin(url, a['href'])).netloc == urlparse(url).netloc]))
         
-        scan_list = internal_urls[:40] # 40 pages for better stability on Vercel
+        # Taking top 30 for safety/speed on Vercel
+        scan_list = internal_urls[:30]
         if url not in scan_list: scan_list.insert(0, url)
 
         # Step 2: Multi-threaded Scan
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
             pages_results = list(executor.map(analyze_single_page, scan_list))
 
-        # Step 3: Calculation Logic
+        # Step 3: Calculation
         valid_pages = [p for p in pages_results if p['words'] > 0]
         avg_words = sum(p['words'] for p in valid_pages) // len(valid_pages) if valid_pages else 0
         s_404 = sum(1 for p in pages_results if p['status'] >= 400)
@@ -58,15 +60,15 @@ def audit(url: str = Query(...)):
         combined_text = " ".join([p['text'] for p in pages_results])
         
         essentials = [ep for ep in ["privacy", "contact", "about", "disclaimer", "terms"] if any(ep in u.lower() for u in internal_urls)]
-        banned = [w for w in ["hack", "cracked", "mod apk", "adult", "casino", "porn", "violence"] if w in combined_text]
+        banned = [w for w in ["hack", "cracked", "mod apk", "adult", "casino", "porn"] if w in combined_text]
         
         score = 100
         advice = []
         if not url.startswith("https"): score -= 15; advice.append("Install SSL (HTTPS).")
-        if s_404 > 0: score -= 15; advice.append(f"Fix {s_404} broken links.")
-        if len(essentials) < 4: score -= 20; advice.append("Add missing Policy pages (Privacy, Terms).")
-        if banned: score -= 30; advice.append(f"Remove prohibited content: {', '.join(set(banned))}")
-        if avg_words < 600: score -= 15; advice_list.append(f"Thin content (Avg {avg_words} words).")
+        if s_404 > 0: score -= 15; advice.append(f"Fix {s_404} broken (404) links.")
+        if len(essentials) < 4: score -= 20; advice.append("Add missing Policy pages (Privacy, About, Terms).")
+        if banned: score -= 30; advice.append(f"Remove prohibited keywords: {', '.join(set(banned))}")
+        if avg_words < 500: score -= 15; advice.append(f"Thin Content (Avg {avg_words} words). Increase depth.")
 
         return JSONResponse({
             "score": max(0, score),
@@ -76,7 +78,6 @@ def audit(url: str = Query(...)):
             "s_404": s_404,
             "redirect_loops": redirect_loops,
             "essentials_found": len(essentials),
-            "banned_found": list(set(banned)),
             "has_ssl": url.startswith("https"),
             "advice": advice
         })
