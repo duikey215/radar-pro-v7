@@ -9,6 +9,7 @@ import concurrent.futures
 import re
 from datetime import datetime
 
+# Domain age fallback (python-whois)
 try:
     import whois
     WHOIS_AVAILABLE = True
@@ -22,11 +23,11 @@ HEADERS = {
     'Accept-Language': 'en-US,en;q=0.9'
 }
 
-# 🚀 NEW: Accurate Total Posts Counter via Sitemap
+# 🚀 Accurate Total Posts Counter via Sitemap
 def get_accurate_total_pages(final_url):
     try:
         sitemap_url = urljoin(final_url, "sitemap.xml")
-        # Step 1: Check robots.txt for custom sitemap
+        # Check robots.txt for custom sitemap
         try:
             rb = requests.get(urljoin(final_url, "robots.txt"), headers=HEADERS, timeout=3)
             if rb.status_code == 200:
@@ -34,7 +35,7 @@ def get_accurate_total_pages(final_url):
                 if match: sitemap_url = match.group(1).strip()
         except: pass
 
-        # Step 2: Fetch and Parse Sitemap
+        # Fetch and Parse Sitemap
         sm_res = requests.get(sitemap_url, headers=HEADERS, timeout=5)
         if sm_res.status_code == 200:
             text = sm_res.text.lower()
@@ -42,22 +43,22 @@ def get_accurate_total_pages(final_url):
             if '<sitemapindex' in text or '<sitemap>' in text:
                 subs = re.findall(r'<loc>(.*?)</loc>', text)
                 total = 0
-                # Fetch up to 4 sub-sitemaps concurrently to save time on Vercel
                 def fetch_sub(sub_url):
                     try:
                         return len(re.findall(r'<url>', requests.get(sub_url, headers=HEADERS, timeout=3).text.lower()))
                     except: return 0
                 with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
-                    counts = list(ex.map(fetch_sub, subs[:4]))
+                    counts = list(ex.map(fetch_sub, subs[:4])) # Checking top 4 sitemaps to save Vercel timeout
                 total = sum(counts)
                 if total > 0: return total
             else:
-                # Standard Sitemap (Basic Blogger)
+                # Standard Sitemap
                 total = len(re.findall(r'<url>', text))
                 if total > 0: return total
     except: pass
-    return 0 # Fallback
+    return 0 
 
+# 🚀 Individual Page Deep Scan
 def analyze_page(url):
     try:
         time.sleep(random.uniform(0.1, 0.2)) 
@@ -68,7 +69,7 @@ def analyze_page(url):
             text = soup.get_text().lower()
             return {
                 "status": res.status_code, "words": len(text.split()), "text": text,
-                "history":[h.status_code for h in res.history], "loop": is_loop
+                "history": [h.status_code for h in res.history], "loop": is_loop
             }
         return {"status": res.status_code, "words": 0, "text": "", "history":[h.status_code for h in res.history], "loop": is_loop}
     except:
@@ -78,10 +79,12 @@ def analyze_page(url):
 def audit(url: str = Query(...)):
     start_time = time.time()
     
+    # 1. URL Auto-Formatting
     if not url.startswith(("http://", "https://")):
         url = "https://" + url
 
     try:
+        # 2. Fetch Homepage & Get EXACT Final URL
         home_res = requests.get(url, headers=HEADERS, timeout=12, allow_redirects=True)
         final_url = str(home_res.url) 
         domain = urlparse(final_url).netloc
@@ -90,6 +93,7 @@ def audit(url: str = Query(...)):
         soup = BeautifulSoup(home_res.text, 'html.parser')
         main_text = soup.get_text().lower()
         
+        # Meta & Architecture
         has_title = soup.title is not None and len(soup.title.text) > 10
         has_desc = soup.find("meta", {"name": "description"}) is not None
         has_viewport = soup.find("meta", {"name": "viewport"}) is not None
@@ -105,37 +109,41 @@ def audit(url: str = Query(...)):
         is_www = "www." in domain
         has_ssl = final_url.startswith("https")
 
+        # 3. Accurate Link Extraction
         links = soup.find_all('a', href=True)
+        exclude_ext = ('.jpg', '.jpeg', '.png', '.gif', '.pdf', '.css', '.js', '.xml', '.svg')
         internal_urls = list(set([
             urljoin(final_url, a['href']).split('#')[0] for a in links 
             if urlparse(urljoin(final_url, a['href'])).netloc == domain
+            and not urlparse(urljoin(final_url, a['href'])).path.lower().endswith(exclude_ext)
         ]))
         
-        # 🔥 Exact Posts Counter Trigger
         accurate_total = get_accurate_total_pages(final_url)
-        # If sitemap fetch fails, fallback to homepage links with a "+" sign
-        total_discovered = str(accurate_total) if accurate_total > 0 else f"{len(internal_urls)}+"
-
+        total_discovered = accurate_total if accurate_total > 0 else len(internal_urls)
+        
         scan_list = internal_urls[:50]
         if final_url not in scan_list: scan_list.insert(0, final_url)
 
+        # 4. Multi-threaded Deep Scan Engine
         with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
             scanned_data = list(executor.map(analyze_page, scan_list))
 
+        # 5. Analysis Math
         s_200 = sum(1 for p in scanned_data if p['status'] == 200)
         s_404 = sum(1 for p in scanned_data if p['status'] >= 400)
         s_301 = sum(1 for p in scanned_data if 301 in p['history'])
         s_302 = sum(1 for p in scanned_data if 302 in p['history'] or 307 in p['history'])
         redirect_loops = sum(1 for p in scanned_data if p['loop'])
         
-        valid_pages = [p for p in scanned_data if p['words'] > 0]
+        valid_pages =[p for p in scanned_data if p['words'] > 0]
         avg_word_count = sum(p['words'] for p in valid_pages) // len(valid_pages) if valid_pages else 0
         combined_text = " ".join([p['text'] for p in scanned_data])
 
+        # Policy Match
         essentials = [ep for ep in["privacy", "contact", "about", "disclaimer", "terms"] if any(ep in u.lower() for u in internal_urls)]
-        banned = [w for w in["hack", "cracked", "mod apk", "adult", "casino", "gambling", "movie download", "porn", "nude", "violence"] if w in combined_text]
+        banned =[w for w in["hack", "cracked", "mod apk", "adult", "casino", "gambling", "movie download", "porn", "nude", "violence"] if w in combined_text]
         cookie_consent = any(w in combined_text for w in["cookie", "consent", "accept", "got it", "gdpr"])
-        under_construction = any(w in combined_text for w in ["under construction", "coming soon", "lorem ipsum"])
+        under_construction = any(w in combined_text for w in["under construction", "coming soon", "lorem ipsum"])
         
         sentences = max(1, len(re.split(r'[.!?]+', main_text)))
         readability_score = (len(main_text.split()) / sentences)
@@ -144,6 +152,7 @@ def audit(url: str = Query(...)):
         has_robots = requests.get(urljoin(final_url, "robots.txt"), headers=HEADERS, timeout=5).status_code == 200
         has_sitemap = requests.get(urljoin(final_url, "sitemap.xml"), headers=HEADERS, timeout=5).status_code == 200
         
+        # Domain Age
         domain_age_days = "Unknown"
         if WHOIS_AVAILABLE:
             try:
@@ -152,8 +161,10 @@ def audit(url: str = Query(...)):
                 if c_date: domain_age_days = (datetime.now() - c_date).days
             except: pass
 
+        # 6. SCORING & ADVICE ENGINE (with unique keys for frontend)
         score = 100
         advice =[]
+        
         if not has_ssl: score -= 15; advice.append({"key": "ssl", "text": "Secure your site with an SSL Certificate (HTTPS) to build user trust."})
         if load_time > 3.0: score -= 5; advice.append({"key": "speed", "text": f"Server response time is {load_time}s. Optimize speed for better crawler access."})
         if s_404 > 0: score -= 15; advice.append({"key": "404", "text": f"Fix {s_404} broken internal links to prevent 'Site Navigation' policy violations."})
@@ -170,7 +181,7 @@ def audit(url: str = Query(...)):
         return JSONResponse({
             "score": max(0, min(score, 100)),
             "load_time": load_time,
-            "total_discovered": total_discovered, # 🔥 Accurate Metric Sent to UI
+            "total_discovered": total_discovered,
             "pages_scanned": len(scanned_data),
             "avg_words": avg_word_count,
             "s_200": s_200, "s_404": s_404, "s_301": s_301, "s_302": s_302, "redirect_loops": redirect_loops,
