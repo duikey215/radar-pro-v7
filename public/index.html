@@ -17,13 +17,11 @@
         @media (min-width: 768px) { .slider-card { flex: 0 0 calc(50% - 12px); } }
         @media (min-width: 1024px) { .slider-card { flex: 0 0 calc(33.333% - 16px); } }
         
-        /* Complete Premium Badge Design */
         .badge { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; font-weight: 600; font-size: 14px; background: #f8fafc; border: 1px solid #e2e8f0; transition: background 0.2s;}
         .badge:hover { background: #f1f5f9; }
         .badge-content { display: flex; align-items: center; gap: 12px; flex: 1; }
         .icon-box { font-size: 16px; flex-shrink: 0; }
         
-        /* Direct Fix Now Button inside Card */
         .fix-link-small { background: #eff6ff; color: #3b82f6; font-size: 11px; text-transform: uppercase; font-weight: 900; text-decoration: none; padding: 6px 12px; border-radius: 6px; border: 1px solid #dbeafe; transition: all 0.2s; white-space: nowrap;}
         .fix-link-small:hover { background: #3b82f6; color: white; }
         
@@ -31,7 +29,7 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="p-3 md:p-8">
+<body class="p-3 md:p-8 pb-20 min-h-screen"> <!-- pb-20 added to fix mobile cutoff -->
 
     <div class="max-w-7xl mx-auto">
         <!-- Professional SEO Header -->
@@ -40,9 +38,16 @@
             <p class="text-slate-400 text-sm md:text-lg font-medium max-w-2xl mx-auto">Analyze 50+ ranking factors, identify policy violations, and optimize your site for Google AdSense approval 📈.</p>
         </div>
 
-        <!-- Input Section -->
+        <!-- Input Section (With Enter Key & Auto-Scroll Support) -->
         <div class="bg-white p-2 md:p-3 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row gap-3 mb-12">
-            <input id="urlInput" type="text" placeholder="Enter your website URL (e.g., mysite.com)" class="flex-1 p-4 md:px-6 outline-none text-lg text-slate-700 font-medium bg-transparent">
+            <input 
+                id="urlInput" 
+                type="text" 
+                placeholder="Enter your website URL (e.g., mysite.com)" 
+                class="flex-1 p-4 md:px-6 outline-none text-lg text-slate-700 font-medium bg-transparent"
+                onfocus="scrollToCenter(this)"
+                onkeypress="handleEnter(event)"
+            >
             <button onclick="runAudit()" id="mainBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-10 py-4 rounded-xl transition-all active:scale-95 shadow-md flex items-center justify-center">
                 <span>Check Eligibility 🚀</span>
             </button>
@@ -54,28 +59,33 @@
 
         <div id="dashboard" class="hidden animate-fade-in">
             
-            <!-- 5 Premium Metric Cards (Accurate Counts) -->
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-5 mb-10">
+            <!-- 🎯 EXACT 6 Premium Metric Cards (grid-cols-2 for mobile, 6 for PC) -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-5 mb-10">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
-                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Eligibility Score</p>
+                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Score</p>
                     <h2 id="mOdds" class="text-4xl font-black text-slate-800">0%</h2>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
-                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Total Posts/Pages</p>
+                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Total Posts</p>
                     <h2 id="mFound" class="text-3xl font-bold text-slate-700">0</h2>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-blue-100 text-blue-700 text-[9px] font-black px-2 py-1 rounded-bl-lg">DEEP SCAN</div>
-                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Pages Audited</p>
+                    <div class="absolute top-0 right-0 bg-blue-100 text-blue-700 text-[9px] font-black px-2 py-1 rounded-bl-lg">SCAN</div>
+                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Audited</p>
                     <h2 id="mScan" class="text-3xl font-bold text-slate-700">0</h2>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
-                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Content Depth</p>
-                    <h2 id="mWords" class="text-3xl font-bold text-slate-700">0 <span class="text-sm text-slate-400 font-medium">words</span></h2>
+                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Avg Words</p>
+                    <h2 id="mWords" class="text-3xl font-bold text-slate-700">0</h2>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
                     <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Audit Speed</p>
                     <h2 id="mSpeed" class="text-3xl font-bold text-slate-700">0s</h2>
+                </div>
+                <!-- 🚀 6th Box: Action Items (Issues Found) -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
+                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Action Items</p>
+                    <h2 id="mActions" class="text-3xl font-bold">0</h2>
                 </div>
             </div>
 
@@ -106,33 +116,26 @@
     </div>
 
     <script>
-        // =======================================================
-        // 🔗 UPDATE YOUR "FIX NOW" ARTICLE LINKS HERE:
-        // =======================================================
+        // Keyboard & Scroll Logic
+        function handleEnter(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                document.getElementById('urlInput').blur(); // Hides keyboard
+                runAudit();
+            }
+        }
+
+        function scrollToCenter(element) {
+            setTimeout(() => {
+                element.scrollIntoView({ behavior: "smooth", block: "center" });
+            }, 300); // 300ms delay accommodates the mobile keyboard popping up
+        }
+
+        // 🔗 Add Your Fix-It Articles Here
         const articleLinks = {
-            "ssl": "https://yourblog.com/how-to-fix-ssl",
-            "server": "https://yourblog.com/server-error-guide",
-            "speed": "https://yourblog.com/improve-site-speed",
-            "canonical": "https://yourblog.com/canonical-url-guide",
-            "404": "https://yourblog.com/fix-broken-links",
-            "loops": "https://yourblog.com/fix-redirect-loops",
-            "redirects": "https://yourblog.com/redirect-guide",
-            "policy": "https://yourblog.com/create-adsense-policy-pages",
-            "banned": "https://yourblog.com/adsense-prohibited-content",
-            "construction": "https://yourblog.com/site-readiness",
-            "cookie": "https://yourblog.com/cookie-consent-guide",
-            "thin": "https://yourblog.com/fix-thin-content",
-            "meta": "https://yourblog.com/meta-tags-guide",
-            "h1": "https://yourblog.com/seo-h1-tags",
-            "alt": "https://yourblog.com/image-alt-guide",
-            "grammar": "https://yourblog.com/grammar-readability",
-            "robots": "https://yourblog.com/robots-txt-guide",
-            "sitemap": "https://yourblog.com/generate-sitemap",
-            "mobile": "https://yourblog.com/mobile-viewport",
-            "depth": "https://yourblog.com/internal-linking",
-            "age": "https://yourblog.com/domain-age-adsense",
-            "adsense": "https://yourblog.com/add-adsense-code",
-            "indexing": "https://yourblog.com/google-indexing"
+            "ssl": "#", "server": "#", "speed": "#", "canonical": "#", "404": "#", "loops": "#", "redirects": "#", "policy": "#",
+            "banned": "#", "construction": "#", "cookie": "#", "thin": "#", "meta": "#", "h1": "#", "alt": "#", "grammar": "#",
+            "robots": "#", "sitemap": "#", "mobile": "#", "depth": "#", "age": "#", "adsense": "#", "indexing": "#"
         };
 
         function slide(idx) {
@@ -140,7 +143,6 @@
             el.scrollTo({ left: el.children[idx].offsetLeft - el.offsetLeft, behavior: 'smooth' });
         }
 
-        // Complete Badge Generator with Built-in "Fix Now" Button
         function renderBadge(cond, passTxt, failTxt, warnCond, warnTxt, fixKey) {
             let statusClass = "bg-green-50 text-emerald-800 border-green-500";
             let text = passTxt;
@@ -149,14 +151,10 @@
 
             if(warnCond) {
                 statusClass = "bg-yellow-50 text-amber-800 border-yellow-500";
-                text = warnTxt;
-                icon = "⚠️";
-                showFix = true;
+                text = warnTxt; icon = "⚠️"; showFix = true;
             } else if(!cond) {
                 statusClass = "bg-red-50 text-red-800 border-red-500";
-                text = failTxt;
-                icon = "❌";
-                showFix = true;
+                text = failTxt; icon = "❌"; showFix = true;
             }
 
             let linkUrl = articleLinks[fixKey] || "#";
@@ -164,10 +162,7 @@
 
             return `
                 <div class="badge ${statusClass}">
-                    <div class="badge-content">
-                        <span class="icon-box">${icon}</span>
-                        <span>${text}</span>
-                    </div>
+                    <div class="badge-content"><span class="icon-box">${icon}</span><span>${text}</span></div>
                     ${fixHtml}
                 </div>`;
         }
@@ -197,40 +192,41 @@
                 loadBox.classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
 
-                // Update Metrics (Accurate formatting)
+                // Metric Cards Update
                 const scoreColor = data.score >= 80 ? '#059669' : (data.score >= 50 ? '#d97706' : '#dc2626');
                 document.getElementById('mOdds').innerText = data.score + "%";
                 document.getElementById('mOdds').style.color = scoreColor;
                 
-                let formattedCount = data.total_discovered.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                document.getElementById('mFound').innerText = formattedCount;
-                
+                document.getElementById('mFound').innerText = data.total_discovered.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 document.getElementById('mScan').innerText = data.pages_scanned;
-                document.getElementById('mWords').innerHTML = `${data.avg_words} <span class="text-sm text-slate-400 font-medium">words</span>`;
+                document.getElementById('mWords').innerText = data.avg_words;
                 document.getElementById('mSpeed').innerText = data.load_time + "s";
 
-                // Card 1: Tech & Speed
+                // 🚀 6th Box Update: Action Items
+                const errorCount = data.advice.length;
+                const mActions = document.getElementById('mActions');
+                mActions.innerText = errorCount;
+                mActions.className = errorCount === 0 ? "text-4xl font-black text-emerald-600 mt-1" : "text-4xl font-black text-red-500 mt-1";
+
+                // Badges Generation
                 document.getElementById('c1').innerHTML = 
                     renderBadge(data.s_200>0, `Website Status: 200 OK (${data.s_200} live)`, "Connection Failed to the server.", false, "", "server") +
                     renderBadge(data.has_ssl, "SSL Certificate is Active (HTTPS)", "SSL Missing. Highly insecure.", false, "", "ssl") +
                     renderBadge(data.load_time <= 2.5, `Fast Latency: ${data.load_time}s`, `Poor Server Speed: ${data.load_time}s`, (data.load_time > 2.5 && data.load_time <= 4.0), `Average Latency: ${data.load_time}s. Optimize cache.`, "speed") +
                     renderBadge(data.is_www, "Canonical URL setup is correctly mapped.", "Non-WWW Canonical structure detected.", false, "", "canonical");
 
-                // Card 2: Links & Errors
                 document.getElementById('c2').innerHTML = 
                     renderBadge(data.s_404==0, `Broken Links: 0 Found (Healthy Architecture)`, `Critical: ${data.s_404} Dead Pages Found (404 Error).`, false, "", "404") +
                     renderBadge(data.redirect_loops==0, "Redirect Loops: 0 Found (Healthy)", `Warning: ${data.redirect_loops} Redirect Loops detected.`, false, "", "loops") +
                     renderBadge(data.s_302==0, "Temporary Redirects (302): None", "", (data.s_302>0), `${data.s_302} Temp Redirects Found. Use Permanent 301s.`, "redirects") +
                     renderBadge(data.s_301>=0, `Permanent 301 Redirects: ${data.s_301} Logged (SEO Safe)`, "", false, "", "redirects");
 
-                // Card 3: Policy Compliance
                 document.getElementById('c3').innerHTML = 
                     renderBadge(data.essentials_found>=4, `Mandatory Pages: ${data.essentials_found}/5 Found`, "Essential Policy/Contact Pages Missing.", false, "", "policy") +
                     renderBadge(data.banned_words.length===0, "Content Integrity: 100% Clean", `Prohibited Terms Found: ${data.banned_words.join(", ")}`, false, "", "banned") +
                     renderBadge(!data.under_construction, "Site Readiness: Active", "Placeholder 'Under Construction' text found.", false, "", "construction") +
                     renderBadge(data.cookie_consent, "Cookie Consent Banner Detected", "", (!data.cookie_consent), "Cookie Banner missing (Required for EU traffic).", "cookie");
 
-                // Card 4: Content & SEO
                 document.getElementById('c4').innerHTML = 
                     renderBadge(data.avg_words>=600, `Content Depth: ${data.avg_words} avg words per page`, `Thin Content Risk: ${data.avg_words} avg words.`, (data.avg_words>=400 && data.avg_words<600), `Moderate Content: ${data.avg_words} avg words. Target 600+.`, "thin") +
                     renderBadge(data.has_title && data.has_desc, "Meta Title & Description properly mapped", "Missing critical Meta tags.", false, "", "meta") +
@@ -238,18 +234,14 @@
                     renderBadge(data.img_total>0 && (data.img_alt/data.img_total)>0.8, `Image Optimization: ${data.img_alt}/${data.img_total} Alt Tags`, "", (data.img_total>0 && (data.img_alt/data.img_total)<=0.8), `Image SEO Warning: Missing Alt Text on images.`, "alt") +
                     renderBadge(data.is_readable, "Readability Score: Optimal", "", (!data.is_readable), "Grammar Warning: Sentence structure needs review.", "grammar");
 
-                // Card 5: Site Structure
                 document.getElementById('c5').innerHTML = 
                     renderBadge(data.has_robots, "Robots.txt present (Crawlable)", "Robots.txt missing! Fix immediately.", false, "", "robots") +
                     renderBadge(data.has_sitemap, "Sitemap.xml present (Indexable)", "Sitemap.xml missing from root directory.", false, "", "sitemap") +
                     renderBadge(data.has_viewport, "Mobile Viewport Tag is Responsive", "Site is not optimized for Mobile devices.", false, "", "mobile") +
                     renderBadge(data.pages_scanned>15, `Site Depth: Good (${data.pages_scanned} pages crawled)`, "", (data.pages_scanned<=15), `Structure Warning: Less than 15 pages deep scanned.`, "depth");
 
-                // Card 6: Domain Metrics
-                let domAgeWarn = data.domain_age_days != "Unknown" && data.domain_age_days >= 30 && data.domain_age_days < 60;
-                let domAgePass = data.domain_age_days != "Unknown" && data.domain_age_days >= 60;
                 document.getElementById('c6').innerHTML = 
-                    renderBadge(domAgePass, `Domain Trust: ${data.domain_age_days} Days Old`, `Domain Too New (${data.domain_age_days} Days)`, domAgeWarn || data.domain_age_days=="Unknown", data.domain_age_days=="Unknown" ? "Domain Age: Verify manually (requires 1-2 months)." : `Age Warning: ${data.domain_age_days} Days. Maintain activity.`, "age") +
+                    renderBadge(data.domain_age_days>=60, `Domain Trust: ${data.domain_age_days} Days Old`, `Domain Too New (${data.domain_age_days} Days)`, (data.domain_age_days>=30 && data.domain_age_days<60) || data.domain_age_days=="Unknown", data.domain_age_days=="Unknown" ? "Domain Age: Verify manually (requires 1-2 months)." : `Age Warning: ${data.domain_age_days} Days. Maintain activity.`, "age") +
                     renderBadge(data.has_adsense, "Monetization: AdSense Code Detected", "", (!data.has_adsense), "No AdSense Publisher Code found in site header.", "adsense") +
                     renderBadge(true, "Organic Source: Traffic is primarily from Google/Bing", "", true, "Indexing Check: Type 'site:yourdomain.com' in Google.", "indexing");
 
@@ -259,11 +251,9 @@
                     advBox.innerHTML = `
                         <h2 class="text-xl font-black mb-5 uppercase text-emerald-700">🎉 Official Report: Site Ready for Monetization</h2>
                         <p class="text-slate-600 mb-4">Your website complies with all primary technical and content guidelines. However, please note:</p>
-                        
                         <div class="bg-amber-50 p-4 rounded-xl border-l-4 border-amber-500 mb-4 shadow-sm">
                             <p class="text-amber-800 font-medium text-sm leading-relaxed">⚠️ <b>Important Disclaimer:</b> Google AdSense policies and algorithms change frequently. While your site passes our stringent technical audit with a 100% score, the final approval decision is subject to Google's manual review team. Getting 100% here guarantees technical readiness, but Google holds the final authority.</p>
                         </div>
-                        
                         <div class="flex items-start gap-3 mb-3"><span class="text-emerald-500 font-bold">✓</span> <p class="text-slate-700"><b>Domain Trust:</b> Ensure active publishing history for 1-2 months.</p></div>
                         <div class="flex items-start gap-3 mb-3"><span class="text-emerald-500 font-bold">✓</span> <p class="text-slate-700"><b>Organic Traffic:</b> Avoid paid/bot traffic. AdSense prefers search engine visitors.</p></div>
                         <div class="flex items-start gap-3"><span class="text-emerald-500 font-bold">✓</span> <p class="text-slate-700"><b>Ad Placements:</b> Keep empty, non-intrusive spaces ready for Auto Ads.</p></div>
@@ -271,7 +261,6 @@
                 } else {
                     let errHtml = `<h2 class="text-xl font-black mb-5 uppercase text-slate-800">📋 Action Required: Compliance Fixes</h2>`;
                     errHtml += `<p class="text-slate-500 mb-5">Our algorithms detected the following issues that typically result in AdSense rejection. Resolve these before applying:</p>`;
-                    
                     data.advice.forEach((item, i) => {
                         let fixLink = articleLinks[item.key] || "#";
                         errHtml += `
@@ -286,7 +275,6 @@
                     });
                     advBox.innerHTML = errHtml;
                 }
-
             } catch (e) {
                 loadBox.classList.add('hidden');
                 alert("❌ Scan Failed: Verify the URL or ensure the server is not blocking bots.");
