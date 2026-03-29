@@ -25,7 +25,7 @@ HEADERS = {
 
 def analyze_page(url):
     try:
-        time.sleep(random.uniform(0.1, 0.3)) # Stealth Jitter
+        time.sleep(random.uniform(0.1, 0.3))
         res = requests.get(url, headers=HEADERS, timeout=8, allow_redirects=True)
         is_loop = len(res.history) >= 3
         if res.status_code == 200:
@@ -43,7 +43,7 @@ def analyze_page(url):
 def audit(url: str = Query(...)):
     start_time = time.time()
     
-    # 🔥 EXTRA FEATURE: URL Auto-Fix (Adds https:// if user forgets)
+    # Auto-Fix URL
     if not url.startswith(("http://", "https://")):
         url = "https://" + url
 
@@ -54,7 +54,6 @@ def audit(url: str = Query(...)):
         soup = BeautifulSoup(home_res.text, 'html.parser')
         main_text = soup.get_text().lower()
         
-        # SEO & Tags from Homepage
         has_title = soup.title is not None and len(soup.title.text) > 10
         has_desc = soup.find("meta", {"name": "description"}) is not None
         has_viewport = soup.find("meta", {"name": "viewport"}) is not None
@@ -70,12 +69,18 @@ def audit(url: str = Query(...)):
         is_www = "www." in urlparse(url).netloc
         has_ssl = url.startswith("https")
 
-        # STEP 2: LINK DISCOVERY & DEEP SCAN
+        # STEP 2: ACCURATE POST/PAGE DISCOVERY
         links = soup.find_all('a', href=True)
         domain = urlparse(url).netloc
-        internal_urls = list(set([urljoin(url, a['href']).split('#')[0] for a in links if urlparse(urljoin(url, a['href'])).netloc == domain]))
+        exclude_ext = ('.jpg', '.jpeg', '.png', '.gif', '.pdf', '.css', '.js', '.xml', '.svg')
         
-        total_discovered = len(internal_urls) # 🔥 Extra Feature
+        internal_urls = list(set([
+            urljoin(url, a['href']).split('#')[0] for a in links 
+            if urlparse(urljoin(url, a['href'])).netloc == domain 
+            and not urlparse(urljoin(url, a['href'])).path.lower().endswith(exclude_ext)
+        ]))
+        
+        total_discovered = len(internal_urls)
         scan_list = internal_urls[:50]
         if url not in scan_list: scan_list.insert(0, url)
 
@@ -93,22 +98,18 @@ def audit(url: str = Query(...)):
         avg_word_count = sum(p['words'] for p in valid_pages) // len(valid_pages) if valid_pages else 0
         combined_text = " ".join([p['text'] for p in scanned_data])
 
-        # Content Policies
         essentials = [ep for ep in["privacy", "contact", "about", "disclaimer", "terms"] if any(ep in u.lower() for u in internal_urls)]
         banned = [w for w in["hack", "cracked", "mod apk", "adult", "casino", "gambling", "movie download", "porn", "nude", "violence"] if w in combined_text]
         cookie_consent = any(w in combined_text for w in["cookie", "consent", "accept", "got it", "gdpr"])
         under_construction = any(w in combined_text for w in ["under construction", "coming soon", "lorem ipsum"])
         
-        # Readability Score
         sentences = max(1, len(re.split(r'[.!?]+', main_text)))
         readability_score = (len(main_text.split()) / sentences)
         is_readable = 8 <= readability_score <= 25 
         
-        # Structure Files
         has_robots = requests.get(urljoin(url, "robots.txt"), headers=HEADERS, timeout=5).status_code == 200
         has_sitemap = requests.get(urljoin(url, "sitemap.xml"), headers=HEADERS, timeout=5).status_code == 200
         
-        # Domain Age
         domain_age_days = "Unknown"
         if WHOIS_AVAILABLE:
             try:
@@ -120,23 +121,23 @@ def audit(url: str = Query(...)):
         # --- SCORING ENGINE ---
         score = 100
         advice =[]
-        if not has_ssl: score -= 15; advice.append("Install an SSL Certificate (HTTPS) immediately. Google strictly blocks unsecured sites.")
-        if load_time > 3.0: score -= 5; advice.append(f"Server response is slow ({load_time}s). AdSense algorithms favor fast-loading content.")
-        if s_404 > 0: score -= 15; advice.append(f"Found {s_404} broken (404) internal links. This triggers 'Site Behavior' policy violations.")
-        if redirect_loops > 0: score -= 10; advice.append(f"Found {redirect_loops} redirect loops. Fix them to allow Googlebot crawling.")
-        if len(essentials) < 4: score -= 20; advice.append(f"Missing mandatory policy pages (Found {len(essentials)}/5). Add Privacy, Contact, and Terms pages.")
-        if banned: score -= 30; advice.append(f"CRITICAL: Policy violation detected. Remove prohibited content: {', '.join(set(banned))}.")
-        if avg_word_count < 600: score -= 15; advice.append(f"Thin Content Risk. Your average word count is {avg_word_count}. AdSense requires deep, unique content (600+ words).")
-        if h1_tags != 1: score -= 5; advice.append(f"SEO Tagging: Homepage has {h1_tags} H1 tags. It must have exactly ONE for proper indexing.")
-        if not has_sitemap: score -= 5; advice.append("Sitemap.xml is missing. Required for fast Google indexing via Search Console.")
-        if under_construction: score -= 25; advice.append("Site appears to be 'Under Construction' or contains dummy Lorem Ipsum text.")
+        if not has_ssl: score -= 15; advice.append("Secure your site with an SSL Certificate (HTTPS) to build user trust.")
+        if load_time > 3.0: score -= 5; advice.append(f"Server response time is {load_time}s. Optimize speed for better crawler access.")
+        if s_404 > 0: score -= 15; advice.append(f"Fix {s_404} broken internal links to prevent 'Site Navigation' policy violations.")
+        if redirect_loops > 0: score -= 10; advice.append(f"Resolve {redirect_loops} redirect loops to ensure Googlebot can crawl your pages.")
+        if len(essentials) < 4: score -= 20; advice.append(f"Add missing policy pages. Found {len(essentials)}/5 (Required: Privacy, Contact, Terms, etc.).")
+        if banned: score -= 30; advice.append(f"Critical: Remove prohibited content keywords to comply with Publisher Policies ({', '.join(set(banned))}).")
+        if avg_word_count < 600: score -= 15; advice.append(f"Thin Content detected (Avg {avg_word_count} words). Aim for 600+ words of unique value per page.")
+        if h1_tags != 1: score -= 5; advice.append(f"SEO Tagging: Ensure your homepage has exactly one H1 tag (Found {h1_tags}).")
+        if not has_sitemap: score -= 5; advice.append("Generate and submit a sitemap.xml for proper search engine indexing.")
+        if under_construction: score -= 25; advice.append("Remove 'Under Construction' or placeholder text before applying.")
         if domain_age_days != "Unknown" and isinstance(domain_age_days, int) and domain_age_days < 30: 
-            score -= 10; advice.append("Domain is less than 30 days old. Establish organic trust before applying.")
+            score -= 10; advice.append("Domain is relatively new. Ensure consistent content publishing for 1-2 months.")
 
         return JSONResponse({
             "score": max(0, min(score, 100)),
             "load_time": load_time,
-            "total_discovered": total_discovered, # Extra Trust Metric
+            "total_discovered": total_discovered,
             "pages_scanned": len(scanned_data),
             "avg_words": avg_word_count,
             "s_200": s_200, "s_404": s_404, "s_301": s_301, "s_302": s_302, "redirect_loops": redirect_loops,
