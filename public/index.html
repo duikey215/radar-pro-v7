@@ -281,6 +281,25 @@
             }
         }
     </script>
+
+<script>
+  function sendHeight() {
+    // Ye aapke tool ki poori height calculate karega
+    const height = document.body.scrollHeight;
+    // Ye height 'Blogger' (parent) ko bhej dega
+    window.parent.postMessage({ 'height': height }, "*");
+  }
+
+  // Jab page load ho tab height bheje
+  window.onload = sendHeight;
+  // Jab window resize ho (mobile rotation etc.) tab bheje
+  window.onresize = sendHeight;
+  // Har 1 second mein check kare (taki jab result aaye to iframe turant lamba ho jaye)
+  setInterval(sendHeight, 1000);
+</script>
+</body>
+</html>
+    
 </body>
 
 </html>
