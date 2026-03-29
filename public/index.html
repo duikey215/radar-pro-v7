@@ -29,16 +29,16 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="p-3 md:p-8 pb-20 min-h-screen"> <!-- pb-20 added to fix mobile cutoff -->
+<body class="p-3 md:p-8 pb-32 min-h-screen flex flex-col"> <!-- pb-32 ADDED FOR EXTRA MOBILE BOTTOM SPACE -->
 
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto w-full flex-1">
         <!-- Professional SEO Header -->
         <div class="hero-bg rounded-3xl p-8 md:p-14 text-center shadow-xl mb-10">
             <h1 class="text-white text-3xl md:text-5xl font-black mb-3 tracking-tight">💵 AdSense Eligibility Checker</h1>
             <p class="text-slate-400 text-sm md:text-lg font-medium max-w-2xl mx-auto">Analyze 50+ ranking factors, identify policy violations, and optimize your site for Google AdSense approval 📈.</p>
         </div>
 
-        <!-- Input Section (With Enter Key & Auto-Scroll Support) -->
+        <!-- Input Section -->
         <div class="bg-white p-2 md:p-3 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row gap-3 mb-12">
             <input 
                 id="urlInput" 
@@ -53,13 +53,15 @@
             </button>
         </div>
 
+        <!-- Loading State -->
         <div id="loadingBox" class="hidden bg-white border border-slate-200 text-slate-700 p-6 rounded-2xl text-center mb-10 shadow-sm font-semibold">
             <div class="loader"></div> <span id="loadingText">Establishing secure connection & crawling site architecture...</span>
         </div>
 
+        <!-- Results Dashboard -->
         <div id="dashboard" class="hidden animate-fade-in">
             
-            <!-- 🎯 EXACT 6 Premium Metric Cards (grid-cols-2 for mobile, 6 for PC) -->
+            <!-- 6 Premium Metric Cards -->
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-5 mb-10">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
                     <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Score</p>
@@ -82,7 +84,6 @@
                     <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Audit Speed</p>
                     <h2 id="mSpeed" class="text-3xl font-bold text-slate-700">0s</h2>
                 </div>
-                <!-- 🚀 6th Box: Action Items (Issues Found) -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
                     <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Action Items</p>
                     <h2 id="mActions" class="text-3xl font-bold">0</h2>
@@ -116,22 +117,23 @@
     </div>
 
     <script>
-        // Keyboard & Scroll Logic
+        // Enter Key Logic
         function handleEnter(event) {
             if (event.key === "Enter") {
                 event.preventDefault();
-                document.getElementById('urlInput').blur(); // Hides keyboard
+                document.getElementById('urlInput').blur();
                 runAudit();
             }
         }
 
+        // Mobile Keyboard Auto-Scroll Logic
         function scrollToCenter(element) {
             setTimeout(() => {
                 element.scrollIntoView({ behavior: "smooth", block: "center" });
-            }, 300); // 300ms delay accommodates the mobile keyboard popping up
+            }, 300);
         }
 
-        // 🔗 Add Your Fix-It Articles Here
+        // 🔗 1. ADD YOUR FIX-IT ARTICLE LINKS HERE:
         const articleLinks = {
             "ssl": "#", "server": "#", "speed": "#", "canonical": "#", "404": "#", "loops": "#", "redirects": "#", "policy": "#",
             "banned": "#", "construction": "#", "cookie": "#", "thin": "#", "meta": "#", "h1": "#", "alt": "#", "grammar": "#",
@@ -192,23 +194,20 @@
                 loadBox.classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
 
-                // Metric Cards Update
                 const scoreColor = data.score >= 80 ? '#059669' : (data.score >= 50 ? '#d97706' : '#dc2626');
                 document.getElementById('mOdds').innerText = data.score + "%";
                 document.getElementById('mOdds').style.color = scoreColor;
                 
                 document.getElementById('mFound').innerText = data.total_discovered.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 document.getElementById('mScan').innerText = data.pages_scanned;
-                document.getElementById('mWords').innerText = data.avg_words;
+                document.getElementById('mWords').innerHTML = `${data.avg_words} <span class="text-sm text-slate-400 font-medium">words</span>`;
                 document.getElementById('mSpeed').innerText = data.load_time + "s";
 
-                // 🚀 6th Box Update: Action Items
                 const errorCount = data.advice.length;
                 const mActions = document.getElementById('mActions');
                 mActions.innerText = errorCount;
                 mActions.className = errorCount === 0 ? "text-4xl font-black text-emerald-600 mt-1" : "text-4xl font-black text-red-500 mt-1";
 
-                // Badges Generation
                 document.getElementById('c1').innerHTML = 
                     renderBadge(data.s_200>0, `Website Status: 200 OK (${data.s_200} live)`, "Connection Failed to the server.", false, "", "server") +
                     renderBadge(data.has_ssl, "SSL Certificate is Active (HTTPS)", "SSL Missing. Highly insecure.", false, "", "ssl") +
@@ -245,7 +244,6 @@
                     renderBadge(data.has_adsense, "Monetization: AdSense Code Detected", "", (!data.has_adsense), "No AdSense Publisher Code found in site header.", "adsense") +
                     renderBadge(true, "Organic Source: Traffic is primarily from Google/Bing", "", true, "Indexing Check: Type 'site:yourdomain.com' in Google.", "indexing");
 
-                // Final Advice Box
                 let advBox = document.getElementById('adviceBox');
                 if(data.advice.length === 0) {
                     advBox.innerHTML = `
