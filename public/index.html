@@ -14,7 +14,7 @@
         
         .slider-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1.5rem; padding-bottom: 2rem; }
         .slider-card { flex: 0 0 88%; scroll-snap-align: center; background: white; border-radius: 16px; border-top: 5px solid #3b82f6; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); padding: 1.75rem; }
-        @media (min-width: 768px) { .slider-card { flex: 0 0 calc(50% - 12px); } .hero-bg rounded-3xl p-8 md:p-14 text-center shadow-xl mb-10{padding:0px;margin:0px;}}
+        @media (min-width: 768px) { .slider-card { flex: 0 0 calc(50% - 12px); }}
         @media (min-width: 1024px) { .slider-card { flex: 0 0 calc(33.333% - 16px); } }
         
         .badge { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; font-weight: 600; font-size: 14px; background: #f8fafc; border: 1px solid #e2e8f0; transition: background 0.2s;}
@@ -29,11 +29,11 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="p-3 md:p-8 pb-20 min-h-screen"> <!-- pb-20 added to fix mobile cutoff -->
+<body class="p-0 md:p-0 pb-20 min-h-screen"> <!-- pb-20 added to fix mobile cutoff -->
 
     <div class="max-w-7xl mx-auto">
         <!-- Professional SEO Header -->
-        <div class="hero-bg rounded-3xl p-8 md:p-14 text-center shadow-xl mb-10">
+        <div class="hero-bg p-8 md:p-14 text-center shadow-xl mb-10"">
             <h1 class="text-white text-3xl md:text-5xl font-black mb-3 tracking-tight">💵 AdSense Eligibility Checker</h1>
             <p class="text-slate-400 text-sm md:text-lg font-medium max-w-2xl mx-auto">Analyze 50+ ranking factors, identify policy violations, and optimize your site for Google AdSense approval 📈.</p>
         </div>
