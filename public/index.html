@@ -12,18 +12,15 @@
         .hero-bg { background-color: #0f172a; background-image: radial-gradient(circle at top right, #1e293b, #0f172a); }
         .hide-scroll::-webkit-scrollbar { display: none; }
         
-        /* Swipeable Container - Refined Shadows */
         .slider-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1.5rem; padding-bottom: 2rem; }
         .slider-card { flex: 0 0 88%; scroll-snap-align: center; background: white; border-radius: 16px; border-top: 5px solid #3b82f6; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); padding: 1.75rem; }
         @media (min-width: 768px) { .slider-card { flex: 0 0 calc(50% - 12px); } }
         @media (min-width: 1024px) { .slider-card { flex: 0 0 calc(33.333% - 16px); } }
         
-        /* Cohesive Professional Badges */
         .badge { display: flex; align-items: flex-start; padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; font-weight: 600; font-size: 14px; background: #f8fafc; border: 1px solid #e2e8f0; transition: background 0.2s;}
         .badge:hover { background: #f1f5f9; }
         .icon-box { margin-right: 12px; font-size: 16px; margin-top: 1px;}
         
-        /* Premium Loader */
         .loader { border: 3px solid #e2e8f0; border-top: 3px solid #3b82f6; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 12px;}
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -31,11 +28,10 @@
 <body class="p-3 md:p-8">
 
     <div class="max-w-7xl mx-auto">
-        
         <!-- Professional SEO Header -->
         <div class="hero-bg rounded-3xl p-8 md:p-14 text-center shadow-xl mb-10">
             <h1 class="text-white text-3xl md:text-5xl font-black mb-3 tracking-tight">💵 AdSense Eligibility Checker</h1>
-            <p class="text-slate-400 text-sm md:text-lg font-medium max-w-2xl mx-auto">Analyze 50+ ranking factors, identify policy violations, and optimize your site for Google AdSense approval.</p>
+            <p class="text-slate-400 text-sm md:text-lg font-medium max-w-2xl mx-auto">Analyze 50+ ranking factors, identify policy violations, and optimize your site for Google AdSense approval 📈.</p>
         </div>
 
         <!-- Input Section -->
@@ -46,22 +42,20 @@
             </button>
         </div>
 
-        <!-- Loading State -->
         <div id="loadingBox" class="hidden bg-white border border-slate-200 text-slate-700 p-6 rounded-2xl text-center mb-10 shadow-sm font-semibold">
             <div class="loader"></div> <span id="loadingText">Establishing secure connection & crawling site architecture...</span>
         </div>
 
-        <!-- Results Dashboard -->
         <div id="dashboard" class="hidden animate-fade-in">
             
-            <!-- Metric Cards: Logical Flow -->
+            <!-- 5 Premium Metric Cards -->
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-5 mb-10">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
                     <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Eligibility Score</p>
                     <h2 id="mOdds" class="text-4xl font-black text-slate-800">0%</h2>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center">
-                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Total Posts Found</p>
+                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1">Links Extracted</p>
                     <h2 id="mFound" class="text-3xl font-bold text-slate-700">0</h2>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center items-center relative overflow-hidden">
@@ -106,6 +100,23 @@
     </div>
 
     <script>
+        // =======================================================
+        // 🔗 UPDATE YOUR "FIX NOW" ARTICLE LINKS HERE:
+        // =======================================================
+        const articleLinks = {
+            "ssl": "https://yourblog.com/how-to-fix-ssl",
+            "speed": "https://yourblog.com/improve-site-speed",
+            "404": "https://yourblog.com/fix-broken-links",
+            "loops": "https://yourblog.com/fix-redirect-loops",
+            "policy": "https://yourblog.com/create-adsense-policy-pages",
+            "banned": "https://yourblog.com/adsense-prohibited-content",
+            "thin": "https://yourblog.com/fix-thin-content",
+            "h1": "https://yourblog.com/seo-h1-tags",
+            "sitemap": "https://yourblog.com/generate-sitemap",
+            "construction": "https://yourblog.com/site-readiness",
+            "age": "https://yourblog.com/domain-age-adsense"
+        };
+
         function slide(idx) {
             const el = document.getElementById('carousel');
             el.scrollTo({ left: el.children[idx].offsetLeft - el.offsetLeft, behavior: 'smooth' });
@@ -131,7 +142,7 @@
             loadBox.classList.remove('hidden');
 
             try {
-                setTimeout(()=> loadTxt.innerText = "Extracting website architecture and scanning total posts...", 1500);
+                setTimeout(()=> loadTxt.innerText = "Extracting website architecture and scanning links...", 1500);
                 setTimeout(()=> loadTxt.innerText = "Analyzing content uniqueness and algorithm metrics...", 3500);
                 setTimeout(()=> loadTxt.innerText = "Compiling official AdSense Policy report...", 6000);
 
@@ -195,12 +206,18 @@
                     renderBadge(data.has_adsense, "Monetization: AdSense Code Detected", "", (!data.has_adsense), "No AdSense Publisher Code found in site header.") +
                     renderBadge(true, "Organic Source: Ensure traffic is primarily from Google/Bing", "", true, "Indexing: Type 'site:yourdomain.com' in Google to verify.");
 
-                // Professional Advice Box Setup
+                // Official Advice Box Setup
                 let advBox = document.getElementById('adviceBox');
                 if(data.advice.length === 0) {
                     advBox.innerHTML = `
                         <h2 class="text-xl font-black mb-5 uppercase text-emerald-700">🎉 Official Report: Site Ready for Monetization</h2>
-                        <p class="text-slate-600 mb-4">Your website complies with primary Google AdSense quality guidelines. Maintain these best practices before submitting:</p>
+                        <p class="text-slate-600 mb-4">Your website complies with all technical and content guidelines. However, please note:</p>
+                        
+                        <!-- NEW DISCLAIMER -->
+                        <div class="bg-amber-50 p-4 rounded-xl border-l-4 border-amber-500 mb-4">
+                            <p class="text-amber-800 font-semibold text-sm">⚠️ <b>Important Disclaimer:</b> Google AdSense policies and algorithms change frequently. While your site passes our stringent technical audit with a 100% score, the final approval decision is subject to Google's manual review team. Getting 100% here guarantees technical readiness, but Google holds the final authority.</p>
+                        </div>
+                        
                         <div class="flex items-start gap-3 mb-3"><span class="text-emerald-500 font-bold">✓</span> <p class="text-slate-700"><b>Domain Trust:</b> Ensure active publishing history for 1-2 months.</p></div>
                         <div class="flex items-start gap-3 mb-3"><span class="text-emerald-500 font-bold">✓</span> <p class="text-slate-700"><b>Organic Traffic:</b> Avoid paid/bot traffic. AdSense prefers search engine visitors.</p></div>
                         <div class="flex items-start gap-3"><span class="text-emerald-500 font-bold">✓</span> <p class="text-slate-700"><b>Ad Placements:</b> Keep empty, non-intrusive spaces ready for Auto Ads.</p></div>
@@ -208,8 +225,18 @@
                 } else {
                     let errHtml = `<h2 class="text-xl font-black mb-5 uppercase text-slate-800">📋 Action Required: Compliance Fixes</h2>`;
                     errHtml += `<p class="text-slate-500 mb-5">Our algorithms detected the following issues that typically result in AdSense rejection. Resolve these before applying:</p>`;
-                    data.advice.forEach((a, i) => {
-                        errHtml += `<div class="bg-red-50 p-4 rounded-xl border border-red-100 border-l-4 border-l-red-500 font-medium text-red-800 mb-3 text-sm leading-relaxed"><span class="font-bold mr-1">Issue ${i+1}:</span> ${a}</div>`;
+                    
+                    data.advice.forEach((item, i) => {
+                        let fixLink = articleLinks[item.key] || "#";
+                        errHtml += `
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 border-l-4 border-l-red-500 mb-4 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="text-slate-700 text-sm font-medium leading-relaxed">
+                                <span class="font-bold text-red-600 mr-1">Issue ${i+1}:</span> ${item.text}
+                            </div>
+                            <a href="${fixLink}" target="_blank" class="bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white border border-blue-200 text-xs font-bold px-4 py-2 rounded-lg transition-colors whitespace-nowrap text-center">
+                                Fix Now ➔
+                            </a>
+                        </div>`;
                     });
                     advBox.innerHTML = errHtml;
                 }
