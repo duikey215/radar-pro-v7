@@ -1,0 +1,144 @@
+  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Pro V7 | Elite Auditor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .hero-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .card-slider { scroll-snap-type: x mandatory; display: flex; overflow-x: auto; gap: 1rem; padding-bottom: 1rem; }
+        .slider-item { scroll-snap-align: center; flex: 0 0 88%; }
+        @media (min-width: 768px) { .slider-item { flex: 0 0 30%; } }
+        .status-badge { border-left: 4px solid; padding: 10px; margin-bottom: 8px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+    </style>
+</head>
+<body class="p-4">
+
+    <!-- Hero Section -->
+    <div class="hero-gradient text-center p-8 rounded-2xl shadow-xl mb-6">
+        <h1 class="text-white text-4xl font-extrabold">🧿 Radar <span class="text-blue-500">Pro</span></h1>
+        <p class="text-slate-400 text-sm mt-2">Professional 50-Page AdSense Master Audit</p>
+    </div>
+
+    <!-- Input Box -->
+    <div class="max-w-2xl mx-auto mb-8">
+        <input id="urlInput" type="text" placeholder="https://example.com" class="w-full p-4 rounded-xl border-2 border-slate-200 focus:border-blue-500 outline-none shadow-sm transition-all text-lg">
+        <button onclick="startAudit()" id="scanBtn" class="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95">🚀 INITIATE DEEP SCAN</button>
+    </div>
+
+    <!-- Results Area (Hidden Initially) -->
+    <div id="resultsArea" class="hidden max-w-6xl mx-auto">
+        
+        <!-- Stats Row -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-xl shadow border-t-4 border-blue-500 text-center">
+                <p class="text-xs text-slate-500 font-bold uppercase">Odds</p>
+                <h2 id="resOdds" class="text-3xl font-black text-slate-800">0%</h2>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow border-t-4 border-slate-400 text-center">
+                <p class="text-xs text-slate-500 font-bold uppercase">Pages</p>
+                <h2 id="resPages" class="text-3xl font-black text-slate-800">0</h2>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow border-t-4 border-slate-400 text-center">
+                <p class="text-xs text-slate-500 font-bold uppercase">Avg Words</p>
+                <h2 id="resWords" class="text-3xl font-black text-slate-800">0</h2>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow border-t-4 border-slate-400 text-center">
+                <p class="text-xs text-slate-500 font-bold uppercase">Speed</p>
+                <h2 id="resSpeed" class="text-3xl font-black text-slate-800">0s</h2>
+            </div>
+        </div>
+
+        <!-- Swipeable Menu -->
+        <div class="flex gap-2 overflow-x-auto hide-scroll mb-4">
+            <button onclick="scrollToCard('tech')" class="bg-slate-200 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">⚙️ Tech</button>
+            <button onclick="scrollToCard('policy')" class="bg-slate-200 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">🛡️ Policy</button>
+            <button onclick="scrollToCard('seo')" class="bg-slate-200 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">📝 SEO</button>
+        </div>
+
+        <!-- Carousel -->
+        <div class="card-slider hide-scroll" id="carousel">
+            <div class="slider-item bg-white p-5 rounded-xl shadow border border-slate-100" id="card-tech">
+                <h3 class="font-bold border-bottom mb-3">⚙️ Tech & Speed</h3>
+                <div id="techBadges"></div>
+            </div>
+            <div class="slider-item bg-white p-5 rounded-xl shadow border border-slate-100" id="card-policy">
+                <h3 class="font-bold mb-3">🛡️ AdSense Policy</h3>
+                <div id="policyBadges"></div>
+            </div>
+            <div class="slider-item bg-white p-5 rounded-xl shadow border border-slate-100" id="card-seo">
+                <h3 class="font-bold mb-3">📝 Content & SEO</h3>
+                <div id="seoBadges"></div>
+            </div>
+        </div>
+
+        <!-- Authority Advice Section -->
+        <div id="adviceSection" class="mt-6 bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+            <h2 class="text-lg font-black border-b pb-3 mb-4 uppercase tracking-wider">⚠️ Action Required: Fixes</h2>
+            <div id="adviceItems" class="space-y-3"></div>
+        </div>
+
+    </div>
+
+    <script>
+        function scrollToCard(id) {
+            document.getElementById('card-' + id).scrollIntoView({ behavior: 'smooth', inline: 'center' });
+        }
+
+        async function startAudit() {
+            const url = document.getElementById('urlInput').value;
+            if(!url) return alert("Enter URL");
+            
+            const btn = document.getElementById('scanBtn');
+            btn.innerHTML = "🌀 AUDITING 50 PAGES...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`/api/audit?url=${encodeURIComponent(url)}`);
+                const data = await response.json();
+
+                if(data.error) throw new Error(data.error);
+
+                document.getElementById('resultsArea').classList.remove('hidden');
+                document.getElementById('resOdds').innerText = data.score + "%";
+                document.getElementById('resPages').innerText = data.pages_scanned;
+                document.getElementById('resWords').innerText = data.avg_words;
+                document.getElementById('resSpeed').innerText = data.load_time + "s";
+
+                // Render Badges (Tech)
+                const techHtml = `
+                    <div class="status-badge ${data.has_ssl ? 'bg-green-100 text-green-800 border-green-500' : 'bg-red-100 text-red-800 border-red-500'}">
+                        ${data.has_ssl ? '✅ SSL Secure' : '❌ SSL Missing'}
+                    </div>
+                    <div class="status-badge bg-green-100 text-green-800 border-green-500">✅ Server Response 200 OK</div>
+                `;
+                document.getElementById('techBadges').innerHTML = techHtml;
+
+                // Render Advice
+                let advHtml = "";
+                if(data.advice.length === 0) {
+                    advHtml = `<div class="p-4 bg-green-50 text-green-700 rounded-lg font-bold border-l-4 border-green-500">🎉 Site Ready for Monetization!</div>`;
+                } else {
+                    data.advice.forEach((a, i) => {
+                        advHtml += `<div class="p-4 bg-red-50 text-red-700 rounded-lg font-bold border-l-4 border-red-500">${i+1}. ${a}</div>`;
+                    });
+                }
+                document.getElementById('adviceItems').innerHTML = advHtml;
+
+                window.scrollTo({ top: document.getElementById('resultsArea').offsetTop, behavior: 'smooth' });
+
+            } catch (e) {
+                alert("Scan Failed: " + e.message);
+            } finally {
+                btn.innerHTML = "🚀 INITIATE DEEP SCAN";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
